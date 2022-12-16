@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import spring.io.restfulAPI.Model.User;
 import spring.io.restfulAPI.Repository.UserRepository;
 import spring.io.restfulAPI.Service.NotFoundException;
+import spring.io.restfulAPI.Service.UserService;
 
 import java.util.List;
 
@@ -13,8 +14,15 @@ import java.util.List;
 @RequestMapping("/api/user/")
 public class UserController {
 
+    private final UserService userService;
+
     @Autowired
     private UserRepository userRepository;
+
+    public UserController(UserService userService, UserRepository userRepository) {
+        this.userService = userService;
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("list")
     public List<User> userList(){
@@ -48,9 +56,9 @@ public class UserController {
         userRepository.deleteById(id);
     }
 
-
-
-
-
+    @GetMapping("searchUser")
+    public List<User> searchAll(@RequestParam(name = "keyword") String keyword){
+        return userService.searchUserByKeyword(keyword);
+    }
 
 }
